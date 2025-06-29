@@ -9,17 +9,17 @@
 #include <stdexcept>
 
 des::des(des_key des_key_obj,
-         std::optional<std::array<std::uint8_t, 64>> ip_table,
-         std::optional<std::array<uint8_t, 48>> e_table,
-         std::optional<std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>> s_box_arr,
-         std::optional<std::array<uint8_t, 32>> p_table,
-         std::optional<std::array<uint8_t, 64>> fp_table)
-         : des_key_gen(des_key_obj),
-           ip_table(ip_table.value_or(des::STANDARD_IP_TABLE)),
-           e_table(e_table.value_or(des::STANDARD_E_TABLE)),
-           s_boxes(s_box_arr.value_or(des::STANDARD_S_BOXES)),
-           p_table(p_table.value_or(des::STANDARD_P_TABLE)),
-           fp_table(fp_table.value_or(des::STANDARD_FP_TABLE)) {}
+         std::array<std::uint8_t, 64> _ip_table,
+         std::array<uint8_t, 48> _e_table,
+         std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8> _s_box_arr,
+         std::array<uint8_t, 32> _p_table,
+         std::array<uint8_t, 64> _fp_table
+         ): des_key_gen(des_key_obj),
+            ip_table(_ip_table),
+            e_table(_e_table),
+            s_boxes(_s_box_arr),
+            p_table(_p_table),
+            fp_table(_fp_table) {}
 
 std::array<uint8_t, 64> des::cipher_initial_permutation_table_gen() {
   std::array<std::uint8_t, 64> result;
@@ -149,7 +149,7 @@ std::string des::encrypt(std::string plain_text) {
 
     std::bitset<64> ip_chunk = this->des::cipher_initial_permutation(chunk_bits);
     std::bitset<64> rounds_chunk = ip_chunk;
-    for (std::uint8_t j{0}; j < 16; ++j) rounds_chunk = this->des::cipher_block_gen(rounds_chunk, this->des_key_gen.key_list[j]);
+    for (std::uint8_t j{0}; j < 16; ++j) rounds_chunk = this->des::cipher_block_gen(rounds_chunk, this->des::des_key_gen.key_list[j]);
 
     std::bitset<32> l16 {std::bitset<32>((rounds_chunk >> 32).to_ulong())}, r16 {std::bitset<32>(rounds_chunk.to_ulong() & 0xFFFFFFFF)};
     std::bitset<64> s_box_chunk_rev = std::bitset<64>((static_cast<std::uint64_t>(r16.to_ulong()) << 32) | static_cast<std::uint64_t>(l16.to_ulong()));

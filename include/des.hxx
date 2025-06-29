@@ -4,7 +4,6 @@
 #include <bitset>
 #include <cstdint>
 #include <des_key.hxx>
-#include <optional>
 #include <string>
 
 class des {
@@ -22,11 +21,11 @@ class des {
   
 public:
   des(des_key,
-      std::optional<std::array<std::uint8_t, 64>> = std::nullopt,
-      std::optional<std::array<std::uint8_t, 48>> = std::nullopt,
-      std::optional<std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>> = std::nullopt,
-      std::optional<std::array<std::uint8_t, 32>> = std::nullopt,
-      std::optional<std::array<std::uint8_t, 64>> = std::nullopt);
+      std::array<std::uint8_t, 64> = des::STANDARD_IP_TABLE,
+      std::array<std::uint8_t, 48> = des::STANDARD_E_TABLE,
+      std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8> = des::STANDARD_S_BOXES,
+      std::array<std::uint8_t, 32> = des::STANDARD_P_TABLE,
+      std::array<std::uint8_t, 64> = des::STANDARD_FP_TABLE);
 
   std::string encrypt(std::string);
   std::string decrypt(std::string);

@@ -4,7 +4,6 @@
 #include <bitset>
 #include <cstdint>
 #include <string>
-#include <optional>
 
 class des_key {
   std::bitset<56> key_initial_permutation(std::bitset<64>);
@@ -14,14 +13,14 @@ class des_key {
 
   public:
     des_key(std::string,
-      std::optional<std::array<uint8_t, 56>> = std::nullopt,
-      std::optional<std::array<std::uint8_t, 16>> = std::nullopt,
-      std::optional<std::array<uint8_t, 48>> = std::nullopt);
+    std::array<uint8_t, 56>,
+    std::array<std::uint8_t, 16>,
+    std::array<uint8_t, 48>);
 
     des_key(std::uint64_t,
-      std::optional<std::array<uint8_t, 56>> = std::nullopt,
-      std::optional<std::array<std::uint8_t, 16>> = std::nullopt,
-      std::optional<std::array<uint8_t, 48>> = std::nullopt);
+      std::array<uint8_t, 56> = des_key::STANDARD_IP_TALBLE,
+      std::array<std::uint8_t, 16> = des_key::STANDARD_CLS_TABLE,
+      std::array<uint8_t, 48> = des_key::STANDARD_CP_TABLE);
 
     const std::uint64_t key_u64;
     const std::bitset<64> key_bits;
