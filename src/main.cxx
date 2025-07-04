@@ -18,7 +18,7 @@ int main (void) {
 
   std::string plain_text = "ThIs Is A vErY sEcReT ... 123456789";
   des_key des_key_obj(0x133457799BBCDFF1);
-  des des_obj(des_key_obj);
+  des des_obj(std::move(des_key_obj));
 
   std::string cipher_text = des_obj.encrypt(plain_text);
   std::string plain_text_r = des_obj.decrypt(cipher_text);

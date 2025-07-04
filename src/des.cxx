@@ -8,18 +8,44 @@
 #include <numeric>
 #include <stdexcept>
 
-des::des(des_key des_key_obj,
-         std::array<std::uint8_t, 64> _ip_table,
-         std::array<uint8_t, 48> _e_table,
-         std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8> _s_box_arr,
-         std::array<uint8_t, 32> _p_table,
-         std::array<uint8_t, 64> _fp_table
+des::des(const des_key& des_key_obj,
+         const std::array<std::uint8_t, 64>& _ip_table,
+         const std::array<uint8_t, 48>& _e_table,
+         const std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>& _s_box_arr,
+         const std::array<uint8_t, 32>& _p_table,
+         const std::array<uint8_t, 64>& _fp_table
          ): des_key_gen(des_key_obj),
             ip_table(_ip_table),
             e_table(_e_table),
             s_boxes(_s_box_arr),
             p_table(_p_table),
             fp_table(_fp_table) {}
+
+des::des(des_key&& des_key_obj,
+         const std::array<std::uint8_t, 64>& _ip_table,
+         const std::array<std::uint8_t, 48>& _e_table,
+         const std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>& _s_box_arr,
+         const std::array<std::uint8_t, 32>& _p_table,
+         const std::array<std::uint8_t, 64>& _fp_table
+         ): des_key_gen(std::move(des_key_obj)),
+            ip_table(_ip_table),
+            e_table(_e_table),
+            s_boxes(_s_box_arr),
+            p_table(_p_table),
+            fp_table(_fp_table) {}
+
+des::des(des_key&& des_key_obj,
+         std::array<std::uint8_t, 64>&& _ip_table,
+         std::array<std::uint8_t, 48>&& _e_table,
+         std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>&& _s_box_arr,
+         std::array<std::uint8_t, 32>&& _p_table,
+         std::array<std::uint8_t, 64>&& _fp_table
+         ): des_key_gen(std::move(des_key_obj)),
+            ip_table(std::move(_ip_table)),
+            e_table(std::move(_e_table)),
+            s_boxes(std::move(_s_box_arr)),
+            p_table(std::move(_p_table)),
+            fp_table(std::move(_fp_table)) {} 
 
 std::array<uint8_t, 64> des::cipher_initial_permutation_table_gen() {
   std::array<std::uint8_t, 64> result;

@@ -5,10 +5,10 @@
 #include <random>
 #include <stdexcept>
 
-des_key::des_key(std::uint64_t _key_u64,
-  std::array<uint8_t, 56> _ip_table,
-  std::array<std::uint8_t, 16> _cls_table,
-  std::array<uint8_t, 48> _cp_table)
+des_key::des_key(const std::uint64_t& _key_u64,
+  const std::array<uint8_t, 56>& _ip_table,
+  const std::array<std::uint8_t, 16>& _cls_table,
+  const std::array<uint8_t, 48>& _cp_table)
   : key_u64(_key_u64),
     key_bits(std::bitset<64>(_key_u64)),
     ip_table(_ip_table),
@@ -16,17 +16,59 @@ des_key::des_key(std::uint64_t _key_u64,
     cp_table(_cp_table),
     key_list(this->des_key::gen_key_list()) {}
 
-des_key::des_key(std::string _str_key,
-  std::array<uint8_t, 56> _ip_table,
-  std::array<std::uint8_t, 16> _cls_table,
-  std::array<uint8_t, 48> _cp_table)
-  : des_key(
-     [_str_key]() -> std::uint64_t {
-       if (_str_key.size() != 8) throw std::invalid_argument("[ERROR] String key must be exacly 8 characters");
-       return std::accumulate(_str_key.begin(), _str_key.end(), std::uint64_t{0},
-         [](std::uint64_t acc, char c) { return (acc << 8) | static_cast<std::uint8_t>(c); });
-     } (),
-     _ip_table, _cls_table, _cp_table) {}
+des_key::des_key(std::uint64_t&& _key_u64,
+  const std::array<uint8_t, 56>& _ip_table,
+  const std::array<std::uint8_t, 16>& _cls_table,
+  const std::array<uint8_t, 48>& _cp_table)
+  : key_u64(std::move(_key_u64)),
+    key_bits(std::bitset<64>(_key_u64)),
+    ip_table(_ip_table),
+    cls_table(_cls_table),
+    cp_table(_cp_table),
+    key_list(this->des_key::gen_key_list()) {}
+
+des_key::des_key(std::uint64_t&& _key_u64,
+  std::array<uint8_t, 56>&& _ip_table,
+  std::array<std::uint8_t, 16>&& _cls_table,
+  std::array<uint8_t, 48>&& _cp_table)
+  : key_u64(std::move(_key_u64)),
+    key_bits(std::bitset<64>(std::move(_key_u64))),
+    ip_table(std::move(_ip_table)),
+    cls_table(std::move(_cls_table)),
+    cp_table(std::move(_cp_table)),
+    key_list(this->des_key::gen_key_list()) {}
+
+des_key::des_key(const std::string& _str_key,
+  const std::array<uint8_t, 56>& _ip_table,
+  const std::array<std::uint8_t, 16>& _cls_table,
+  const std::array<uint8_t, 48>& _cp_table)
+  : des_key(string_to_uint64(_str_key), _ip_table, _cls_table, _cp_table) {} 
+
+des_key::des_key(std::string&& _str_key,
+  const std::array<uint8_t, 56>& _ip_table,
+  const std::array<std::uint8_t, 16>& _cls_table,
+  const std::array<uint8_t, 48>& _cp_table)
+  : des_key(string_to_uint64(std::move(_str_key)), _ip_table, _cls_table, _cp_table) {} 
+
+des_key::des_key(std::string&& _str_key,
+  std::array<uint8_t, 56>&& _ip_table,
+  std::array<std::uint8_t, 16>&& _cls_table,
+  std::array<uint8_t, 48>&& _cp_table)
+  : des_key(string_to_uint64(std::move(_str_key)), std::move(_ip_table), std::move(_cls_table), std::move(_cp_table)) {} 
+
+std::uint64_t des_key::string_to_uint64(const std::string& str) {
+  if (str.size() != 8) throw std::invalid_argument("[ERROR] String key must be exactly 8 characters");
+  return std::accumulate(str.begin(), str.end(), std::uint64_t{0},
+    [](std::uint64_t acc, char c) {
+      return (acc << 8) | static_cast<std::uint8_t>(c); 
+    });}
+
+std::uint64_t des_key::string_to_uint64(std::string&& str) {
+  if (str.size() != 8) throw std::invalid_argument("[ERROR] String key must be exactly 8 characters");
+  return std::accumulate(str.begin(), str.end(), std::uint64_t{0},
+    [](std::uint64_t acc, char c) {
+      return (acc << 8) | static_cast<std::uint8_t>(c); 
+    });}
 
 std::array<uint8_t, 56> des_key::key_initial_permutation_table_gen() {
   std::array<uint8_t, 56> result;

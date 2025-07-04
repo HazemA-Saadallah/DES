@@ -10,17 +10,39 @@ class des_key {
   std::bitset<56> key_circular_shifted_left(std::bitset<56>, std::uint8_t);
   std::bitset<48> key_compression_permutation(std::bitset<56>);
   std::array<std::bitset<48>, 16> gen_key_list();
+  std::uint64_t string_to_uint64(const std::string&);
+  std::uint64_t string_to_uint64(std::string&&);
 
   public:
-    des_key(std::string,
-    std::array<uint8_t, 56>,
-    std::array<std::uint8_t, 16>,
-    std::array<uint8_t, 48>);
+    des_key(const std::uint64_t&,
+            const std::array<uint8_t, 56>& = des_key::STANDARD_IP_TABLE,
+            const std::array<std::uint8_t, 16>& = des_key::STANDARD_CLS_TABLE,
+            const std::array<uint8_t, 48>& = des_key::STANDARD_CP_TABLE);
 
-    des_key(std::uint64_t,
-      std::array<uint8_t, 56> = des_key::STANDARD_IP_TALBLE,
-      std::array<std::uint8_t, 16> = des_key::STANDARD_CLS_TABLE,
-      std::array<uint8_t, 48> = des_key::STANDARD_CP_TABLE);
+    des_key(std::uint64_t&&,
+            const std::array<uint8_t, 56>& = des_key::STANDARD_IP_TABLE,
+            const std::array<std::uint8_t, 16>& = des_key::STANDARD_CLS_TABLE,
+            const std::array<uint8_t, 48>& = des_key::STANDARD_CP_TABLE);
+
+    des_key(std::uint64_t&&,
+            std::array<uint8_t, 56>&&,
+            std::array<std::uint8_t, 16>&&,
+            std::array<uint8_t, 48>&&);
+
+    des_key(const std::string&,
+            const std::array<uint8_t, 56>& = des_key::STANDARD_IP_TABLE,
+            const std::array<std::uint8_t, 16>& = des_key::STANDARD_CLS_TABLE,
+            const std::array<uint8_t, 48>& = des_key::STANDARD_CP_TABLE);
+
+    des_key(std::string&&,
+            const std::array<uint8_t, 56>& = des_key::STANDARD_IP_TABLE,
+            const std::array<std::uint8_t, 16>& = des_key::STANDARD_CLS_TABLE,
+            const std::array<uint8_t, 48>& = des_key::STANDARD_CP_TABLE);
+
+    des_key(std::string&&,
+            std::array<uint8_t, 56>&&,
+            std::array<std::uint8_t, 16>&&,
+            std::array<uint8_t, 48>&&);
 
     const std::uint64_t key_u64;
     const std::bitset<64> key_bits;
@@ -33,7 +55,7 @@ class des_key {
     static std::array<std::uint8_t, 16> key_circular_left_shifted_table_gen();
     static std::array<uint8_t, 48> key_compression_permutation_table_gen();
 
-    constexpr static const std::array<std::uint8_t, 56> STANDARD_IP_TALBLE = { 
+    constexpr static const std::array<std::uint8_t, 56> STANDARD_IP_TABLE = { 
       57, 49, 41, 33, 25, 17, 9,
       1,  58, 50, 42, 34, 26, 18,
       10,  2,  59, 51, 43, 35, 27,

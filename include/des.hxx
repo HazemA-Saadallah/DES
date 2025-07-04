@@ -20,12 +20,26 @@ class des {
 
   
 public:
-  des(des_key,
-      std::array<std::uint8_t, 64> = des::STANDARD_IP_TABLE,
-      std::array<std::uint8_t, 48> = des::STANDARD_E_TABLE,
-      std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8> = des::STANDARD_S_BOXES,
-      std::array<std::uint8_t, 32> = des::STANDARD_P_TABLE,
-      std::array<std::uint8_t, 64> = des::STANDARD_FP_TABLE);
+  des(const des_key&,
+      const std::array<std::uint8_t, 64>& = des::STANDARD_IP_TABLE,
+      const std::array<std::uint8_t, 48>& = des::STANDARD_E_TABLE,
+      const std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>& = des::STANDARD_S_BOXES,
+      const std::array<std::uint8_t, 32>& = des::STANDARD_P_TABLE,
+      const std::array<std::uint8_t, 64>& = des::STANDARD_FP_TABLE);
+
+  des(des_key&&,
+      const std::array<std::uint8_t, 64>& = des::STANDARD_IP_TABLE,
+      const std::array<std::uint8_t, 48>& = des::STANDARD_E_TABLE,
+      const std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>& = des::STANDARD_S_BOXES,
+      const std::array<std::uint8_t, 32>& = des::STANDARD_P_TABLE,
+      const std::array<std::uint8_t, 64>& = des::STANDARD_FP_TABLE);
+
+  des(des_key&&,
+      std::array<std::uint8_t, 64>&&,
+      std::array<std::uint8_t, 48>&&,
+      std::array<std::array<std::array<std::uint8_t, 16>, 4>, 8>&&,
+      std::array<std::uint8_t, 32>&&,
+      std::array<std::uint8_t, 64>&&);
 
   std::string encrypt(std::string);
   std::string decrypt(std::string);
